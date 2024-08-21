@@ -1,4 +1,4 @@
-package com.dietPlan.dto;
+package com.dietPlan.web.dtoTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

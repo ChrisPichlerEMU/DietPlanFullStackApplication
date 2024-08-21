@@ -1,4 +1,4 @@
-package com.dietPlan.service;
+package com.dietPlan.infrastructure.serviceTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,11 +30,11 @@ import com.dietPlan.domain.model.Week;
 import com.dietPlan.domain.repository.DayRepository;
 import com.dietPlan.domain.repository.FoodRepository;
 import com.dietPlan.domain.repository.WeekRepository;
-import com.dietPlan.dto.*;
+import com.dietPlan.web.dto.*;
 import com.dietPlan.infrastructure.service.CalculateStats;
 import com.dietPlan.infrastructure.service.DietService;
-import com.dietPlan.mappers.*;
-import com.dietPlan.models.*;
+import com.dietPlan.domain.mapper.*;
+import com.dietPlan.domain.model.*;
 import com.dietPlan.web.dto.DayDto;
 import com.dietPlan.web.dto.FoodDto;
 import com.dietPlan.web.dto.WeekDto;

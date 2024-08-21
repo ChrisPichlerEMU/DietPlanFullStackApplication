@@ -1,4 +1,4 @@
-package com.dietPlan.models;
+package com.dietPlan.domain.modelTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
