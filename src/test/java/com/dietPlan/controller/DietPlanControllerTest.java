@@ -24,18 +24,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.dietPlan.Repositories.FoodRepository;
-import com.dietPlan.dto.DayDto;
-import com.dietPlan.dto.FoodDto;
-import com.dietPlan.dto.WeekDto;
-import com.dietPlan.mappers.DayMapper;
-import com.dietPlan.mappers.FoodMapper;
-import com.dietPlan.mappers.WeekMapper;
-import com.dietPlan.models.Day;
-import com.dietPlan.models.Food;
-import com.dietPlan.models.Week;
-import com.dietPlan.service.CalculateStats;
-import com.dietPlan.service.DietService;
+import com.dietPlan.domain.mapper.DayMapper;
+import com.dietPlan.domain.mapper.FoodMapper;
+import com.dietPlan.domain.mapper.WeekMapper;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
+import com.dietPlan.domain.repository.FoodRepository;
+import com.dietPlan.infrastructure.service.CalculateStats;
+import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.web.controller.DietPlanController;
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
+import com.dietPlan.web.dto.WeekDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(DietPlanController.class)

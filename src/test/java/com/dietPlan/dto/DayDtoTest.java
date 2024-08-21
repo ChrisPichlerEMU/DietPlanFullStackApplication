@@ -10,6 +10,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
+import com.dietPlan.web.dto.WeekDto;
+
 public class DayDtoTest {
 	
 	private FoodDto foodDto;

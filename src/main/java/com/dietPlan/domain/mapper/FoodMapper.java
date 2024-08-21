@@ -1,12 +1,12 @@
-package com.dietPlan.mappers;
+package com.dietPlan.domain.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-import com.dietPlan.dto.FoodDto;
-import com.dietPlan.models.Food;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.web.dto.FoodDto;
 
 @Mapper
 public interface FoodMapper {

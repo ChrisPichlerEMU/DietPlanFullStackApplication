@@ -1,4 +1,4 @@
-package com.dietPlan.models;
+package com.dietPlan.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;

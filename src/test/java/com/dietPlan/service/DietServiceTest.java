@@ -21,12 +21,23 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.dietPlan.Repositories.DayRepository;
-import com.dietPlan.Repositories.FoodRepository;
-import com.dietPlan.Repositories.WeekRepository;
+import com.dietPlan.domain.mapper.DayMapper;
+import com.dietPlan.domain.mapper.FoodMapper;
+import com.dietPlan.domain.mapper.WeekMapper;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
+import com.dietPlan.domain.repository.DayRepository;
+import com.dietPlan.domain.repository.FoodRepository;
+import com.dietPlan.domain.repository.WeekRepository;
 import com.dietPlan.dto.*;
+import com.dietPlan.infrastructure.service.CalculateStats;
+import com.dietPlan.infrastructure.service.DietService;
 import com.dietPlan.mappers.*;
 import com.dietPlan.models.*;
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
+import com.dietPlan.web.dto.WeekDto;
 
 public class DietServiceTest {
 	

@@ -1,4 +1,4 @@
-package com.dietPlan.dto;
+package com.dietPlan.web.dto;
 
 public class FoodDto {
 	private String name;

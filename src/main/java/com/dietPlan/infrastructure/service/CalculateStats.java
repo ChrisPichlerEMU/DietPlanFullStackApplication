@@ -1,10 +1,10 @@
-package com.dietPlan.service;
+package com.dietPlan.infrastructure.service;
 
 import org.springframework.stereotype.Service;
 
-import com.dietPlan.models.Day;
-import com.dietPlan.models.Food;
-import com.dietPlan.models.Week;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
 
 @Service
 public class CalculateStats {

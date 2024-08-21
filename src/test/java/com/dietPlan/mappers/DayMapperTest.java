@@ -11,12 +11,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.dietPlan.dto.DayDto;
-import com.dietPlan.dto.FoodDto;
-import com.dietPlan.dto.WeekDto;
-import com.dietPlan.models.Day;
-import com.dietPlan.models.Food;
-import com.dietPlan.models.Week;
+import com.dietPlan.domain.mapper.DayMapper;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
+import com.dietPlan.web.dto.WeekDto;
 
 public class DayMapperTest {
 	private final DayMapper dayMapper = DayMapper.INSTANCE;

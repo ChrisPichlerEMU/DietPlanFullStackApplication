@@ -1,15 +1,28 @@
-package com.dietPlan.dto;
+package com.dietPlan.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dietPlan.models.Day;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-public class WeekDto {  
-	@JsonIgnore
-	private List<DayDto> daysInList;
-	
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+@Entity
+public class Week {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @OneToMany(mappedBy = "week")
+    @JsonManagedReference
+    @JsonIgnore
+    private List<Day> daysInList;
+    
 	private int totalCalories;
 	private int totalProtein;
 	private int totalCarbs;
@@ -22,16 +35,24 @@ public class WeekDto {
 	private int proteinRatio;
 	private int fatRatio;
 	private boolean isDeleted = false;
-	
-	public WeekDto() {
-		daysInList = new ArrayList<>();
+    
+    public Week() {
+    	daysInList = new ArrayList<>();
+    }
+    
+	public Long getId() {
+		return id;
 	}
 	
-	public List<DayDto> getDaysInList() {
+	public void setId(Long id) {
+		this.id = id;
+	}
+    
+	public List<Day> getDaysInList() {
 		return daysInList;
 	}
 
-	public void setDaysInList(List<DayDto> daysInList) {
+	public void setDaysInList(List<Day> daysInList) {
 		this.daysInList = daysInList;
 	}
 

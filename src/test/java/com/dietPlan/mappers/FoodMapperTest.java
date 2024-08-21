@@ -10,10 +10,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.dietPlan.dto.DayDto;
-import com.dietPlan.dto.FoodDto;
-import com.dietPlan.models.Day;
-import com.dietPlan.models.Food;
+import com.dietPlan.domain.mapper.FoodMapper;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
 
 public class FoodMapperTest {
 	private final FoodMapper foodMapper = FoodMapper.INSTANCE;

@@ -8,9 +8,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.dietPlan.models.Day;
-import com.dietPlan.models.Food;
-import com.dietPlan.models.Week;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
+import com.dietPlan.infrastructure.service.CalculateStats;
 
 public class CalculateStatsTest {
 	

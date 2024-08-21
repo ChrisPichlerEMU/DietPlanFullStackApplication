@@ -1,4 +1,4 @@
-package com.dietPlan.service;
+package com.dietPlan.infrastructure.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,16 +9,19 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 
-import com.dietPlan.Repositories.DayRepository;
-import com.dietPlan.Repositories.FoodRepository;
-import com.dietPlan.Repositories.WeekRepository;
-import com.dietPlan.dto.*;
-import com.dietPlan.mappers.DayMapper;
-import com.dietPlan.mappers.FoodMapper;
-import com.dietPlan.mappers.WeekMapper;
-import com.dietPlan.models.Day;
-import com.dietPlan.models.Food;
-import com.dietPlan.models.Week;
+import com.dietPlan.domain.mapper.DayMapper;
+import com.dietPlan.domain.mapper.FoodMapper;
+import com.dietPlan.domain.mapper.WeekMapper;
+import com.dietPlan.domain.model.Day;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
+import com.dietPlan.domain.repository.DayRepository;
+import com.dietPlan.domain.repository.FoodRepository;
+import com.dietPlan.domain.repository.WeekRepository;
+import com.dietPlan.web.dto.*;
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
+import com.dietPlan.web.dto.WeekDto;
 
 @Service
 //Does the calculating of macro/micro nutrients

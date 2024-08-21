@@ -1,10 +1,10 @@
-package com.dietPlan.mappers;
+package com.dietPlan.domain.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.dietPlan.dto.WeekDto;
-import com.dietPlan.models.Week;
+import com.dietPlan.domain.model.Week;
+import com.dietPlan.web.dto.WeekDto;
 
 @Mapper
 public interface WeekMapper {

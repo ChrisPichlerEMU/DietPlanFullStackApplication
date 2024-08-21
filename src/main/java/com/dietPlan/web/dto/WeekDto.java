@@ -1,15 +1,15 @@
-package com.dietPlan.dto;
+package com.dietPlan.web.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.dietPlan.models.Food;
-import com.dietPlan.models.Week;
+import com.dietPlan.domain.model.Day;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class DayDto {
-	private List<FoodDto> foods;
+public class WeekDto {  
+	@JsonIgnore
+	private List<DayDto> daysInList;
 	
-	private WeekDto week;
-		
 	private int totalCalories;
 	private int totalProtein;
 	private int totalCarbs;
@@ -22,21 +22,17 @@ public class DayDto {
 	private int proteinRatio;
 	private int fatRatio;
 	private boolean isDeleted = false;
-
-	public List<FoodDto> getFoods() {
-		return foods;
-	}
-
-	public void setFoods(List<FoodDto> foods) {
-		this.foods = foods;
+	
+	public WeekDto() {
+		daysInList = new ArrayList<>();
 	}
 	
-	public WeekDto getWeek() {
-		return week;
+	public List<DayDto> getDaysInList() {
+		return daysInList;
 	}
-	
-	public void setWeek(WeekDto week) {
-		this.week = week;
+
+	public void setDaysInList(List<DayDto> daysInList) {
+		this.daysInList = daysInList;
 	}
 
 	public int getTotalCalories() {
@@ -103,7 +99,7 @@ public class DayDto {
 		this.totalPotassium = totalPotassium;
 	}
 
-	public double getCarbRatio() {
+	public int getCarbRatio() {
 		return carbRatio;
 	}
 
@@ -111,7 +107,7 @@ public class DayDto {
 		this.carbRatio = carbRatio;
 	}
 
-	public double getProteinRatio() {
+	public int getProteinRatio() {
 		return proteinRatio;
 	}
 
@@ -119,7 +115,7 @@ public class DayDto {
 		this.proteinRatio = proteinRatio;
 	}
 
-	public double getFatRatio() {
+	public int getFatRatio() {
 		return fatRatio;
 	}
 

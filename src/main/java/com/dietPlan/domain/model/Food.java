@@ -1,4 +1,4 @@
-package com.dietPlan.models;
+package com.dietPlan.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

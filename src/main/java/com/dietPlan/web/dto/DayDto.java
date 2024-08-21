@@ -1,28 +1,15 @@
-package com.dietPlan.models;
+package com.dietPlan.web.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.dietPlan.domain.model.Food;
+import com.dietPlan.domain.model.Week;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
-@Entity
-public class Week {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @OneToMany(mappedBy = "week")
-    @JsonManagedReference
-    @JsonIgnore
-    private List<Day> daysInList;
-    
+public class DayDto {
+	private List<FoodDto> foods;
+	
+	private WeekDto week;
+		
 	private int totalCalories;
 	private int totalProtein;
 	private int totalCarbs;
@@ -35,25 +22,21 @@ public class Week {
 	private int proteinRatio;
 	private int fatRatio;
 	private boolean isDeleted = false;
-    
-    public Week() {
-    	daysInList = new ArrayList<>();
-    }
-    
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-    
-	public List<Day> getDaysInList() {
-		return daysInList;
+
+	public List<FoodDto> getFoods() {
+		return foods;
 	}
 
-	public void setDaysInList(List<Day> daysInList) {
-		this.daysInList = daysInList;
+	public void setFoods(List<FoodDto> foods) {
+		this.foods = foods;
+	}
+	
+	public WeekDto getWeek() {
+		return week;
+	}
+	
+	public void setWeek(WeekDto week) {
+		this.week = week;
 	}
 
 	public int getTotalCalories() {
@@ -120,7 +103,7 @@ public class Week {
 		this.totalPotassium = totalPotassium;
 	}
 
-	public int getCarbRatio() {
+	public double getCarbRatio() {
 		return carbRatio;
 	}
 
@@ -128,7 +111,7 @@ public class Week {
 		this.carbRatio = carbRatio;
 	}
 
-	public int getProteinRatio() {
+	public double getProteinRatio() {
 		return proteinRatio;
 	}
 
@@ -136,7 +119,7 @@ public class Week {
 		this.proteinRatio = proteinRatio;
 	}
 
-	public int getFatRatio() {
+	public double getFatRatio() {
 		return fatRatio;
 	}
 

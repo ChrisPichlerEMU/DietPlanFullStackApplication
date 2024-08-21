@@ -1,7 +1,10 @@
-package com.dietPlan.controller;
+package com.dietPlan.web.controller;
 
-import com.dietPlan.dto.*;
-import com.dietPlan.service.DietService;
+import com.dietPlan.web.dto.*;
+import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.web.dto.DayDto;
+import com.dietPlan.web.dto.FoodDto;
+import com.dietPlan.web.dto.WeekDto;
 
 import java.util.Collections;
 import java.util.List;
