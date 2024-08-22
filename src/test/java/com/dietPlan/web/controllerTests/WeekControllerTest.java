@@ -27,8 +27,9 @@ import com.dietPlan.domain.mapper.DayMapper;
 import com.dietPlan.domain.mapper.WeekMapper;
 import com.dietPlan.domain.model.Day;
 import com.dietPlan.domain.model.Week;
+import com.dietPlan.infrastructure.orchestrator.WeekOrchestrator;
 import com.dietPlan.infrastructure.service.CalculateStats;
-import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.infrastructure.service.WeekService;
 import com.dietPlan.web.controller.WeekController;
 import com.dietPlan.web.dto.DayDto;
 import com.dietPlan.web.dto.FoodDto;
@@ -42,7 +43,10 @@ public class WeekControllerTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private static DietService dietService;
+	private static WeekService weekService;
+	
+	@MockBean
+	private static WeekOrchestrator weekOrchestrator;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -124,12 +128,13 @@ public class WeekControllerTest {
 	
 	@AfterAll
 	public static void tearDown() {
-		reset(dietService);
+		reset(weekService);
+		reset(weekOrchestrator);
 	}
 	
 	@Test
 	public void testAddWeekValidRequest() throws Exception{
-		when(dietService.addWeek(any(WeekDto.class))).thenReturn(weekDto);
+		when(weekService.addWeek(any(WeekDto.class))).thenReturn(weekDto);
 		
 		mockMvc.perform(post("/week/addWeek")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -160,6 +165,53 @@ public class WeekControllerTest {
 	}
 	
 	@Test
+	public void testGetWeekValidRequest() throws Exception{
+		when(weekOrchestrator.getWeekStats(any(Long.class))).thenReturn(weekDto);
+		
+		mockMvc.perform(put("/week/getWeek/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.totalCalories").value(3000))
+				.andExpect(jsonPath("$.totalProtein").value(250))
+				.andExpect(jsonPath("$.totalCarbs").value(300))
+				.andExpect(jsonPath("$.totalSugar").value(120))
+				.andExpect(jsonPath("$.totalFat").value(89))
+				.andExpect(jsonPath("$.totalSaturatedFat").value(20))
+				.andExpect(jsonPath("$.totalSodium").value(3000))
+				.andExpect(jsonPath("$.totalPotassium").value(3500))
+				.andExpect(jsonPath("$.carbRatio").value(40))
+				.andExpect(jsonPath("$.proteinRatio").value(33))
+				.andExpect(jsonPath("$.fatRatio").value(27))
+				.andReturn();
+	}
+	
+	@Test
+	public void testDeleteWeekValidRequest() throws Exception{
+		weekDto.setDeleted(true);
+		
+		when(weekService.deleteWeek(any(Long.class))).thenReturn(weekDto);
+		
+		mockMvc.perform(delete("/week/deleteWeek/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.totalCalories").value(3000))
+				.andExpect(jsonPath("$.totalProtein").value(250))
+				.andExpect(jsonPath("$.totalCarbs").value(300))
+				.andExpect(jsonPath("$.totalSugar").value(120))
+				.andExpect(jsonPath("$.totalFat").value(89))
+				.andExpect(jsonPath("$.totalSaturatedFat").value(20))
+				.andExpect(jsonPath("$.totalSodium").value(3000))
+				.andExpect(jsonPath("$.totalPotassium").value(3500))
+				.andExpect(jsonPath("$.carbRatio").value(40))
+				.andExpect(jsonPath("$.proteinRatio").value(33))
+				.andExpect(jsonPath("$.fatRatio").value(27))
+				.andReturn();
+	}
+	
+	@Test
 	public void testAddDaysToWeekValidRequest() throws Exception {
 		dayDto.setFoods(List.of(foodDto, foodDtoTwo));
 		dayDtoTwo.setFoods(List.of(foodDto, foodDto));
@@ -178,7 +230,7 @@ public class WeekControllerTest {
 		calculateStats.calculateTotalWeekStats(weekDtoToWeek);		//Make sure calculateTotalWeekStats() is called on weekDto to get correct total stats returned
 		weekDto = WeekMapper.INSTANCE.toWeekDto(weekDtoToWeek);
 		
-		when(dietService.addDaysToWeek(any(Long.class), anyList())).thenReturn(weekDto);		
+		when(weekOrchestrator.addDaysToWeek(any(Long.class), anyList())).thenReturn(weekDto);		
 		
 		mockMvc.perform(post("/week/addDaysToWeek/1")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -220,7 +272,7 @@ public class WeekControllerTest {
 		calculateStats.calculateTotalWeekStats(week);
 		weekDto = WeekMapper.INSTANCE.toWeekDto(week);
 		
-		when(dietService.deleteDaysInWeek(any(Long.class), anyList())).thenReturn(weekDto);		
+		when(weekOrchestrator.deleteDaysInWeek(any(Long.class), anyList())).thenReturn(weekDto);		
 		
 		mockMvc.perform(post("/week/deleteDaysInWeek/1")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -236,53 +288,6 @@ public class WeekControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
 				.andExpect(status().isBadRequest())
-				.andReturn();
-	}
-	
-	@Test
-	public void testGetWeekValidRequest() throws Exception{
-		when(dietService.getWeekStats(any(Long.class))).thenReturn(weekDto);
-		
-		mockMvc.perform(put("/week/getWeek/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(""))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.totalCalories").value(3000))
-				.andExpect(jsonPath("$.totalProtein").value(250))
-				.andExpect(jsonPath("$.totalCarbs").value(300))
-				.andExpect(jsonPath("$.totalSugar").value(120))
-				.andExpect(jsonPath("$.totalFat").value(89))
-				.andExpect(jsonPath("$.totalSaturatedFat").value(20))
-				.andExpect(jsonPath("$.totalSodium").value(3000))
-				.andExpect(jsonPath("$.totalPotassium").value(3500))
-				.andExpect(jsonPath("$.carbRatio").value(40))
-				.andExpect(jsonPath("$.proteinRatio").value(33))
-				.andExpect(jsonPath("$.fatRatio").value(27))
-				.andReturn();
-	}
-	
-	@Test
-	public void testDeleteWeekValidRequest() throws Exception{
-		weekDto.setDeleted(true);
-		
-		when(dietService.deleteWeek(any(Long.class))).thenReturn(weekDto);
-		
-		mockMvc.perform(delete("/week/deleteWeek/1")
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.totalCalories").value(3000))
-				.andExpect(jsonPath("$.totalProtein").value(250))
-				.andExpect(jsonPath("$.totalCarbs").value(300))
-				.andExpect(jsonPath("$.totalSugar").value(120))
-				.andExpect(jsonPath("$.totalFat").value(89))
-				.andExpect(jsonPath("$.totalSaturatedFat").value(20))
-				.andExpect(jsonPath("$.totalSodium").value(3000))
-				.andExpect(jsonPath("$.totalPotassium").value(3500))
-				.andExpect(jsonPath("$.carbRatio").value(40))
-				.andExpect(jsonPath("$.proteinRatio").value(33))
-				.andExpect(jsonPath("$.fatRatio").value(27))
 				.andReturn();
 	}
 }

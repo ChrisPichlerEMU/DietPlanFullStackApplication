@@ -20,7 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.infrastructure.service.FoodService;
 import com.dietPlan.web.controller.FoodController;
 import com.dietPlan.web.dto.FoodDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +32,7 @@ public class FoodControllerTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private static DietService dietService;
+	private static FoodService foodService;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -56,12 +56,12 @@ public class FoodControllerTest {
 	
 	@AfterAll
 	public static void tearDown() {
-		reset(dietService);
+		reset(foodService);
 	}
 
 	@Test
 	public void testAddFoodValidRequest() throws Exception{
-		when(dietService.addFood(any(FoodDto.class))).thenReturn(foodDto);
+		when(foodService.addFood(any(FoodDto.class))).thenReturn(foodDto);
 			
 		mockMvc.perform(post("/food/addFood")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class FoodControllerTest {
 	}	
 	@Test
 	public void testGetFoodValidRequest() throws Exception{
-		when(dietService.getFoodStats(any(Long.class))).thenReturn(foodDto);
+		when(foodService.getFoodStats(any(Long.class))).thenReturn(foodDto);
 		
 		mockMvc.perform(get("/food/getFood/1")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +113,7 @@ public class FoodControllerTest {
 
 	@Test
 	public void testEditFoodValidRequest() throws Exception{
-		when(dietService.editFood(any(Long.class), any(FoodDto.class))).thenReturn(foodDto);
+		when(foodService.editFood(any(Long.class), any(FoodDto.class))).thenReturn(foodDto);
 		
 		mockMvc.perform(put("/food/editFood/1")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -146,7 +146,7 @@ public class FoodControllerTest {
 	public void testDeleteFood() throws Exception{
 		foodDto.setDeleted(true);
 		
-		when(dietService.deleteFood(any(Long.class))).thenReturn(foodDto);
+		when(foodService.deleteFood(any(Long.class))).thenReturn(foodDto);
 		
 		mockMvc.perform(delete("/food/deleteFood/1")
 				.contentType(MediaType.APPLICATION_JSON))

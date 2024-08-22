@@ -12,46 +12,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.infrastructure.orchestrator.WeekOrchestrator;
+import com.dietPlan.infrastructure.service.WeekService;
 import com.dietPlan.web.dto.WeekDto;
 
 @RestController
 @RequestMapping("/week")
 public class WeekController {
 
-	private DietService dietService;
+	private WeekService weekService;
+	private WeekOrchestrator weekOrchestrator;
 	
-	public WeekController(DietService dietService) {
-		this.dietService = dietService;
+	public WeekController(WeekService weekService, WeekOrchestrator weekOrchestrator) {
+		this.weekService = weekService;
+		this.weekOrchestrator = weekOrchestrator;
 	}
 	
 	@PostMapping("/addWeek")
 	public ResponseEntity<WeekDto> addWeek(@RequestBody WeekDto weekDto){
-		WeekDto savedWeekObject = dietService.addWeek(weekDto);
+		WeekDto savedWeekObject = weekService.addWeek(weekDto);
 		return new ResponseEntity<>(savedWeekObject, HttpStatus.CREATED);
-	}
-	
-	@PostMapping("/addDaysToWeek/{weekId}")
-	public ResponseEntity<WeekDto> addDaysToWeek(@PathVariable Long weekId, @RequestBody List<Long> dayIds){
-		WeekDto updatedWeekObject = dietService.addDaysToWeek(weekId, dayIds);
-		return new ResponseEntity<>(updatedWeekObject, HttpStatus.CREATED);
-	}
-	
-	@PostMapping("/deleteDaysInWeek/{weekId}")
-	public ResponseEntity<WeekDto> deleteDaysInWeek(@PathVariable Long weekId, @RequestBody List<Long> dayIds){
-		WeekDto updatedWeekObject = dietService.deleteDaysInWeek(weekId, dayIds);
-		return new ResponseEntity<>(updatedWeekObject, HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/getWeek/{weekId}")
 	public ResponseEntity<WeekDto> getWeekStats(@PathVariable Long weekId){
-		WeekDto returnedWeekObject = dietService.getWeekStats(weekId);
+		WeekDto returnedWeekObject = weekOrchestrator.getWeekStats(weekId);
 		return ResponseEntity.ok(returnedWeekObject);
 	}
 	
 	@DeleteMapping("/deleteWeek/{weekId}")
 	public ResponseEntity<WeekDto> deleteWeek(@PathVariable Long weekId){
-		WeekDto weekToBeSoftDeleted = dietService.deleteWeek(weekId);
+		WeekDto weekToBeSoftDeleted = weekService.deleteWeek(weekId);
 		return ResponseEntity.ok(weekToBeSoftDeleted);
+	}
+	
+	@PostMapping("/addDaysToWeek/{weekId}")
+	public ResponseEntity<WeekDto> addDaysToWeek(@PathVariable Long weekId, @RequestBody List<Long> dayIds){
+		WeekDto updatedWeekObject = weekOrchestrator.addDaysToWeek(weekId, dayIds);
+		return new ResponseEntity<>(updatedWeekObject, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/deleteDaysInWeek/{weekId}")
+	public ResponseEntity<WeekDto> deleteDaysInWeek(@PathVariable Long weekId, @RequestBody List<Long> dayIds){
+		WeekDto updatedWeekObject = weekOrchestrator.deleteDaysInWeek(weekId, dayIds);
+		return new ResponseEntity<>(updatedWeekObject, HttpStatus.CREATED);
 	}
 }

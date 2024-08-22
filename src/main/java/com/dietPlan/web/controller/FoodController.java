@@ -11,40 +11,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.infrastructure.service.FoodService;
 import com.dietPlan.web.dto.FoodDto;
 
 @RestController
 @RequestMapping("/food")
 public class FoodController {
 	
-	private DietService dietService;
+	private FoodService foodService;
 	
-	public FoodController(DietService dietService) {
-		this.dietService = dietService;
+	public FoodController(FoodService foodService) {
+		this.foodService = foodService;
 	}
 	
 	@PostMapping("/addFood")
 	public ResponseEntity<FoodDto> addFood(@RequestBody FoodDto foodDto){
-		FoodDto savedFoodObject = dietService.addFood(foodDto);
+		FoodDto savedFoodObject = foodService.addFood(foodDto);
 		return new ResponseEntity<>(savedFoodObject, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/getFood/{foodId}")
 	public ResponseEntity<FoodDto> getFoodStats(@PathVariable Long foodId){
-		FoodDto returnedFoodObject = dietService.getFoodStats(foodId);
+		FoodDto returnedFoodObject = foodService.getFoodStats(foodId);
 		return ResponseEntity.ok(returnedFoodObject);
 	}
 	
 	@PutMapping("/editFood/{foodId}")
 	public ResponseEntity<FoodDto> editFood(@PathVariable Long foodId, @RequestBody FoodDto foodDto){
-		FoodDto foodToBeEdited = dietService.editFood(foodId, foodDto);
+		FoodDto foodToBeEdited = foodService.editFood(foodId, foodDto);
 		return ResponseEntity.ok(foodToBeEdited);
 	}
 	
 	@DeleteMapping("/deleteFood/{foodId}")
 	public ResponseEntity<FoodDto> deleteFood(@PathVariable Long foodId){
-		FoodDto foodToBeSoftDeleted = dietService.deleteFood(foodId);
+		FoodDto foodToBeSoftDeleted = foodService.deleteFood(foodId);
 		return ResponseEntity.ok(foodToBeSoftDeleted);
 	}
 }

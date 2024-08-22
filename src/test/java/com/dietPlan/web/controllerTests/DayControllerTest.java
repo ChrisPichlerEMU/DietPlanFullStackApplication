@@ -27,8 +27,9 @@ import com.dietPlan.domain.mapper.DayMapper;
 import com.dietPlan.domain.mapper.FoodMapper;
 import com.dietPlan.domain.model.Day;
 import com.dietPlan.domain.model.Food;
+import com.dietPlan.infrastructure.orchestrator.DayOrchestrator;
 import com.dietPlan.infrastructure.service.CalculateStats;
-import com.dietPlan.infrastructure.service.DietService;
+import com.dietPlan.infrastructure.service.DayService;
 import com.dietPlan.web.controller.DayController;
 import com.dietPlan.web.dto.DayDto;
 import com.dietPlan.web.dto.FoodDto;
@@ -41,7 +42,10 @@ public class DayControllerTest {
 	private MockMvc mockMvc;
 	
 	@MockBean
-	private static DietService dietService;
+	private static DayService dayService;
+	
+	@MockBean
+	private static DayOrchestrator dayOrchestrator;
 	
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -96,12 +100,13 @@ public class DayControllerTest {
 	
 	@AfterAll
 	public static void tearDown() {
-		reset(dietService);
+		reset(dayService);
+		reset(dayOrchestrator);
 	}
 	
 	@Test
 	public void testAddDayValidRequest() throws Exception{
-		when(dietService.addDay(any(DayDto.class))).thenReturn(dayDto);
+		when(dayService.addDay(any(DayDto.class))).thenReturn(dayDto);
 		
 		mockMvc.perform(post("/day/addDay")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -132,6 +137,53 @@ public class DayControllerTest {
 	}
 	
 	@Test
+	public void testGetDayValidRequest() throws Exception{
+		when(dayOrchestrator.getDayStats(any(Long.class))).thenReturn(dayDto);
+		
+		mockMvc.perform(put("/day/getDay/1")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.totalCalories").value(500))
+				.andExpect(jsonPath("$.totalProtein").value(50))
+				.andExpect(jsonPath("$.totalCarbs").value(50))
+				.andExpect(jsonPath("$.totalSugar").value(25))
+				.andExpect(jsonPath("$.totalFat").value(9))
+				.andExpect(jsonPath("$.totalSaturatedFat").value(5))
+				.andExpect(jsonPath("$.totalSodium").value(500))
+				.andExpect(jsonPath("$.totalPotassium").value(600))
+				.andExpect(jsonPath("$.carbRatio").value(40))
+				.andExpect(jsonPath("$.proteinRatio").value(40))
+				.andExpect(jsonPath("$.fatRatio").value(20))
+				.andReturn();
+	}
+	
+	@Test
+	public void testDeleteDay() throws Exception{
+		dayDto.setDeleted(true);
+		
+		when(dayService.deleteDay(any(Long.class))).thenReturn(dayDto);
+		
+		mockMvc.perform(delete("/day/deleteDay/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.totalCalories").value(500))
+				.andExpect(jsonPath("$.totalProtein").value(50))
+				.andExpect(jsonPath("$.totalCarbs").value(50))
+				.andExpect(jsonPath("$.totalSugar").value(25))
+				.andExpect(jsonPath("$.totalFat").value(9))
+				.andExpect(jsonPath("$.totalSaturatedFat").value(5))
+				.andExpect(jsonPath("$.totalSodium").value(500))
+				.andExpect(jsonPath("$.totalPotassium").value(600))
+				.andExpect(jsonPath("$.carbRatio").value(40))
+				.andExpect(jsonPath("$.proteinRatio").value(40))
+				.andExpect(jsonPath("$.fatRatio").value(20))
+				.andReturn();
+	}
+	
+	@Test
 	public void testAddFoodsToDayValidRequest() throws Exception{
 		dayDto.setFoods(List.of(foodDto, foodDtoTwo));
 		
@@ -139,7 +191,7 @@ public class DayControllerTest {
 		calculateStats.calculateTotalDayStats(dayDtotoDay);		//Make sure calculateTotalDayStats() is called on dayDto to get correct total stats returned
 		dayDto = DayMapper.INSTANCE.toDayDto(dayDtotoDay);
 		
-		when(dietService.addFoodsToDay(any(Long.class), anyList())).thenReturn(dayDto);		
+		when(dayOrchestrator.addFoodsToDay(any(Long.class), anyList())).thenReturn(dayDto);		
 		
 		mockMvc.perform(post("/day/addFoodsToDay/1")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -199,7 +251,7 @@ public class DayControllerTest {
 		calculateStats.calculateTotalDayStats(day);		
 		dayDto = DayMapper.INSTANCE.toDayDto(day);
 		
-		when(dietService.deleteFoodsInDay(any(Long.class), anyList())).thenReturn(dayDto);		
+		when(dayOrchestrator.deleteFoodsInDay(any(Long.class), anyList())).thenReturn(dayDto);		
 		
 		mockMvc.perform(post("/day/deleteFoodsInDay/1")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -244,53 +296,6 @@ public class DayControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
 				.andExpect(status().isBadRequest())
-				.andReturn();
-	}
-	
-	@Test
-	public void testGetDayValidRequest() throws Exception{
-		when(dietService.getDayStats(any(Long.class))).thenReturn(dayDto);
-		
-		mockMvc.perform(put("/day/getDay/1")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(""))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.totalCalories").value(500))
-				.andExpect(jsonPath("$.totalProtein").value(50))
-				.andExpect(jsonPath("$.totalCarbs").value(50))
-				.andExpect(jsonPath("$.totalSugar").value(25))
-				.andExpect(jsonPath("$.totalFat").value(9))
-				.andExpect(jsonPath("$.totalSaturatedFat").value(5))
-				.andExpect(jsonPath("$.totalSodium").value(500))
-				.andExpect(jsonPath("$.totalPotassium").value(600))
-				.andExpect(jsonPath("$.carbRatio").value(40))
-				.andExpect(jsonPath("$.proteinRatio").value(40))
-				.andExpect(jsonPath("$.fatRatio").value(20))
-				.andReturn();
-	}
-	
-	@Test
-	public void testDeleteDay() throws Exception{
-		dayDto.setDeleted(true);
-		
-		when(dietService.deleteDay(any(Long.class))).thenReturn(dayDto);
-		
-		mockMvc.perform(delete("/day/deleteDay/1")
-				.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(jsonPath("$.totalCalories").value(500))
-				.andExpect(jsonPath("$.totalProtein").value(50))
-				.andExpect(jsonPath("$.totalCarbs").value(50))
-				.andExpect(jsonPath("$.totalSugar").value(25))
-				.andExpect(jsonPath("$.totalFat").value(9))
-				.andExpect(jsonPath("$.totalSaturatedFat").value(5))
-				.andExpect(jsonPath("$.totalSodium").value(500))
-				.andExpect(jsonPath("$.totalPotassium").value(600))
-				.andExpect(jsonPath("$.carbRatio").value(40))
-				.andExpect(jsonPath("$.proteinRatio").value(40))
-				.andExpect(jsonPath("$.fatRatio").value(20))
 				.andReturn();
 	}
 }
