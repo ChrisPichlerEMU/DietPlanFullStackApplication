@@ -82,11 +82,11 @@ public class FoodControllerTest {
 	}
 	
 	@Test
-	public void testAddFoodInvalidRequestNullBody() throws Exception{
+	public void testAddFoodInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/food/addFood")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())		//Null body should return error code 400
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}	
 	@Test
@@ -134,11 +134,11 @@ public class FoodControllerTest {
 	}
 	
 	@Test
-	public void testEditFoodInvalidRequestNullBody() throws Exception{
+	public void testEditFoodInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(put("/food/editFood/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}
 	

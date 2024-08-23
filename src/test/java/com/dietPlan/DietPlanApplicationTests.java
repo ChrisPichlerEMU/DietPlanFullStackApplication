@@ -9,11 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class DietPlanApplicationTests {
 
-	@BeforeAll
-	public static void setUp() {
-		System.setProperty("spring.profiles.active", "test");
-	}
-	
 	@Test
 	void contextLoads() {
 	}

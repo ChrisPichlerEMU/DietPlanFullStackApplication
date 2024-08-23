@@ -13,4 +13,7 @@ public interface FoodRepository extends JpaRepository <Food, Long>{
 	@Override
 	@Query("SELECT f FROM Food f WHERE f.id = :id AND f.isDeleted = false")
 	Optional<Food> findById(@Param("id") Long id);
+	
+	@Query("SELECT f FROM Food f WHERE f.name = :name")
+	Optional<Food> findByName(String name);
 }

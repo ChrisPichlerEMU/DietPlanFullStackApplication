@@ -41,6 +41,7 @@ public class DayOrchestrator {
 		for(Long foodId : foodIds) {
 			Food nextFoodObjectAdded = foodRepository.findById(foodId).orElseThrow(() -> new RuntimeException("Food object not found in database in addFoodsToDay method with id = " + foodId));
 			foodsAddedToDayObject.add(nextFoodObjectAdded);
+			dayBeingUpdated.getFoodIdsInFoodsList().add(foodId);
 		}
 		dayBeingUpdated.getFoods().addAll(foodsAddedToDayObject);
 		calculateStats.calculateTotalDayStats(dayBeingUpdated);	
@@ -53,6 +54,7 @@ public class DayOrchestrator {
 		for(Long foodId : foodIds) {
 			Food nextFoodObjectRemoved = foodRepository.findById(foodId).orElseThrow(() -> new RuntimeException("Food object not found in database in deleteFoodsInDay method with id = " + foodId));
 			dayBeingUpdated.getFoods().remove(nextFoodObjectRemoved);
+			dayBeingUpdated.getFoodIdsInFoodsList().remove(foodId);
 		}
 		calculateStats.calculateTotalDayStats(dayBeingUpdated);	
 		dayRepository.save(dayBeingUpdated);

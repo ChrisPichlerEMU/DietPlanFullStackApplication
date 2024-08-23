@@ -79,6 +79,7 @@ public class WeekTest {
 		week = new Week();
 		week.setId(5L);
 		week.setDaysInList(List.of(day, dayTwo));
+		week.setDayIdsInDayList(List.of(4L, 9L));
 		week.setTotalCalories(1350);
 		week.setTotalProtein(90);
 		week.setTotalCarbs(200);
@@ -120,6 +121,23 @@ public class WeekTest {
 		assertNotNull(week.getDaysInList());
 		assertEquals(day, week.getDaysInList().get(1));
 		assertEquals(4, week.getDaysInList().get(1).getFoods().get(0).getFat());
+	}
+	
+	@Test
+	public void testGetDayIdsInDayList() {
+		assertNotNull(week.getDayIdsInDayList());
+		assertEquals(2, week.getDayIdsInDayList().size());
+		assertEquals(4L, week.getDayIdsInDayList().get(0));
+		assertEquals(9L, week.getDayIdsInDayList().get(1));
+	}
+	
+	@Test
+	public void testSetDayIdsInDayList() {
+		week.setDayIdsInDayList(List.of(4L));
+		
+		assertNotNull(week.getDayIdsInDayList());
+		assertEquals(1, week.getDayIdsInDayList().size());
+		assertEquals(4L, week.getDayIdsInDayList().get(0));
 	}
 	
 	@Test

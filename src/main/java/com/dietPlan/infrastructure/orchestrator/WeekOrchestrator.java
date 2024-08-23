@@ -40,10 +40,11 @@ public class WeekOrchestrator {
 		
 		for(Day day : daysAddedToWeekObject) {
 			calculateStats.calculateTotalDayStats(day);
-			day.setWeek(weekBeingUpdated);
+			day.setWeekId(weekBeingUpdated.getId());
 		}
 		
 		weekBeingUpdated.getDaysInList().addAll(daysAddedToWeekObject);
+		weekBeingUpdated.getDayIdsInDayList().addAll(dayIds);
 		calculateStats.calculateTotalWeekStats(weekBeingUpdated);
 		weekRepository.save(weekBeingUpdated);
 		return WeekMapper.INSTANCE.toWeekDto(weekBeingUpdated);
@@ -52,6 +53,11 @@ public class WeekOrchestrator {
 	public WeekDto deleteDaysInWeek(Long weekId, List<Long> dayIds) {
 		Week weekBeingUpdated = weekRepository.findById(weekId).orElseThrow(() -> new RuntimeException("Week object not found in database in addDaysToWeek method with id = " + weekId));
 		List<Day> daysDeletedFromWeekObject = dayRepository.findAllById(dayIds);
+		
+		for(Day day: daysDeletedFromWeekObject) {
+			day.setWeekId(null);
+			weekBeingUpdated.getDayIdsInDayList().remove(day.getId());
+		}
 		
 		weekBeingUpdated.getDaysInList().removeAll(daysDeletedFromWeekObject);
 		calculateStats.calculateTotalWeekStats(weekBeingUpdated);

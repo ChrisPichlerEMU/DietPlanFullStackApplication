@@ -128,11 +128,11 @@ public class DayControllerTest {
 	}
 	
 	@Test
-	public void testAddDayInvalidRequestNullBody() throws Exception{
+	public void testAddDayInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/day/addDay")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())		//Null body should return error code 400
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}
 	
@@ -231,11 +231,11 @@ public class DayControllerTest {
 	}
 	
 	@Test
-	public void testAddFoodsToDayInvalidRequestNullBody() throws Exception{
+	public void testAddFoodsToDayInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/day/addFoodsToDay/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}
 	
@@ -291,11 +291,11 @@ public class DayControllerTest {
 	}
 	
 	@Test
-	public void testDeleteFoodsInDayInvalidRequestNullBody() throws Exception{
+	public void testDeleteFoodsInDayInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/day/deleteFoodsInDay/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}
 }

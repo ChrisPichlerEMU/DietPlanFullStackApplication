@@ -1,6 +1,7 @@
 package com.dietPlan.web.dto;
 
 public class FoodDto {
+	private Long id;
 	private String name;
     private int calories;
     private int protein;
@@ -12,6 +13,14 @@ public class FoodDto {
     private int potassium;
     private double multiplier = 1.0;
     private boolean isDeleted = false;
+    
+    public Long getId() {
+    	return id;
+    }
+    
+    public void setId(Long id) {
+    	this.id = id;    
+    }
     
     public String getName() {
     	return name;

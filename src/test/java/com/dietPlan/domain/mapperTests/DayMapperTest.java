@@ -125,7 +125,6 @@ public class DayMapperTest {
 	void testToDayDtoValid() {
 		day = new Day();
 		day.setFoods(List.of(food, food, foodTwo));
-		day.setWeek(week);
 		
 		dayDto = dayMapper.toDayDto(day);
 		
@@ -134,7 +133,6 @@ public class DayMapperTest {
 		assertEquals(dayDto.getFoods().get(0).getName(), day.getFoods().get(0).getName());
 		assertEquals(dayDto.getFoods().get(1).getProtein(), day.getFoods().get(1).getProtein());
 		assertEquals(dayDto.getFoods().get(2).getSaturatedFat(), day.getFoods().get(2).getSaturatedFat());
-		assertEquals(dayDto.getWeek().getTotalFat(), day.getWeek().getTotalFat());
 	}
 	
 	@Test
@@ -165,20 +163,9 @@ public class DayMapperTest {
 	}
 	
 	@Test
-	void testToDayDtoInvalidDayListInWeekNull() {
-		day.setWeek(week);
-		week.setDaysInList(null);
-		
-		dayDto = dayMapper.toDayDto(day);
-		
-		assertNull(dayDto.getWeek().getDaysInList());
-	}
-	
-	@Test
 	void testToDayValid() {
 		dayDto = new DayDto();
 		dayDto.setFoods(List.of(foodDto, foodDtoTwo, foodDtoTwo));
-		dayDto.setWeek(weekDto);
 		
 		day = dayMapper.toDay(dayDto);
 		
@@ -187,7 +174,6 @@ public class DayMapperTest {
 		assertEquals(day.getFoods().get(0).getCarbs(), dayDto.getFoods().get(0).getCarbs());
 		assertEquals(day.getFoods().get(1).getFat(), dayDto.getFoods().get(1).getFat());
 		assertEquals(day.getFoods().get(2).isDeleted(), dayDto.getFoods().get(2).isDeleted());
-		assertEquals(day.getWeek().getTotalCarbs(), dayDto.getWeek().getTotalCarbs());
 	}
 	
 	@Test
@@ -198,19 +184,8 @@ public class DayMapperTest {
 	}
 	
 	@Test
-	void testToDayInvalidDayListInWeekNull() {
-		dayDto.setWeek(weekDto);
-		weekDto.setDaysInList(null);
-		
-		day = dayMapper.toDay(dayDto);
-		
-		assertNull(day.getWeek().getDaysInList());
-	}
-	
-	@Test
 	void testUpdatedFoodRowFromDtoValid() {
 		day.setId(3L);
-		day.setWeek(week);
 		
 		List<Food> foodList = Collections.singletonList(food);
 		day.setFoods(new ArrayList<>(foodList));
@@ -218,7 +193,6 @@ public class DayMapperTest {
 		dayDto = new DayDto();
 		List<FoodDto> foodListForDto = Collections.singletonList(foodDto);
 		dayDto.setFoods(new ArrayList<FoodDto>(foodListForDto));
-		dayDto.setWeek(weekDto);
 		
 		dayMapper.updateFoodRowFromDto(dayDto, day);
 		
@@ -227,7 +201,6 @@ public class DayMapperTest {
 		assertEquals(1, day.getFoods().size());
 		assertEquals("Protein bar", day.getFoods().get(0).getName());
 		assertEquals(400, day.getFoods().get(0).getCalories());
-		assertEquals(dayDto.getWeek().getTotalCalories(), day.getWeek().getTotalCalories());
 	}
 	
 	@Test
@@ -308,19 +281,4 @@ public class DayMapperTest {
 		assertNotNull(day);
 		assertNull(day.getFoods().get(0));
 	}
-	
-	@Test
-	void testUpdatedFoodRowFromDtoInvalidDay_WeekNull() {
-		day.setId(3L);
-		day.setWeek(null);
-		
-		WeekDto weekDto = new WeekDto();
-		dayDto = new DayDto();
-		dayDto.setWeek(weekDto);
-		
-		dayMapper.updateFoodRowFromDto(dayDto, day);
-		
-		assertNotNull(day);
-		assertNotNull(day.getWeek());
-	}	
 }

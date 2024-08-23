@@ -7,8 +7,12 @@ import com.dietPlan.domain.model.Day;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class WeekDto {  
+	private Long id;
+
 	@JsonIgnore
 	private List<DayDto> daysInList;
+	
+	private List<Long> dayIdsInDayList;
 	
 	private int totalCalories;
 	private int totalProtein;
@@ -23,6 +27,14 @@ public class WeekDto {
 	private int fatRatio;
 	private boolean isDeleted = false;
 	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public WeekDto() {
 		daysInList = new ArrayList<>();
 	}
@@ -33,6 +45,14 @@ public class WeekDto {
 
 	public void setDaysInList(List<DayDto> daysInList) {
 		this.daysInList = daysInList;
+	}
+	
+	public List<Long> getDayIdsInDayList(){
+		return dayIdsInDayList;
+	}
+	
+	public void setDayIdsInDayList(List<Long> dayIdsInDayList) {
+		this.dayIdsInDayList = dayIdsInDayList;
 	}
 
 	public int getTotalCalories() {

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,10 +31,10 @@ public class Day {
 	)
 	private List<Food> foods;
 	
-	@ManyToOne
-	@JoinColumn(name = "week_id")
-	@JsonBackReference
-	private Week week;
+	@Column(name = "week_id")
+	private Long weekId;
+	
+	private List<Long> foodIdsInFoodsList = new ArrayList<>();
 	
 	private int totalCalories;
 	private int totalProtein;
@@ -67,12 +69,20 @@ public class Day {
 		this.foods = foods;
 	}
 	
-	public Week getWeek() {
-		return week;
+	public Long getWeekId() {
+		return weekId;
 	}
 	
-	public void setWeek(Week week) {
-		this.week = week;
+	public void setWeekId(Long weekId) {
+		this.weekId = weekId;
+	}
+	
+	public List<Long> getFoodIdsInFoodsList() {
+		return foodIdsInFoodsList;
+	}
+	
+	public void setFoodIdsInFoodsList(List<Long> foodIdsInFoodsList) {
+		this.foodIdsInFoodsList = foodIdsInFoodsList;
 	}
 
 	public int getTotalCalories() {

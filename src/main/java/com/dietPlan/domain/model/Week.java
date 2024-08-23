@@ -18,10 +18,11 @@ public class Week {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToMany(mappedBy = "week")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "weekId")
     @JsonIgnore
     private List<Day> daysInList;
+    
+    private List<Long> dayIdsInDayList = new ArrayList<>();
     
 	private int totalCalories;
 	private int totalProtein;
@@ -54,6 +55,14 @@ public class Week {
 
 	public void setDaysInList(List<Day> daysInList) {
 		this.daysInList = daysInList;
+	}
+	
+	public List<Long> getDayIdsInDayList() {
+		return dayIdsInDayList;
+	}
+	
+	public void setDayIdsInDayList(List<Long> dayIdsInDayList) {
+		this.dayIdsInDayList = dayIdsInDayList;
 	}
 
 	public int getTotalCalories() {

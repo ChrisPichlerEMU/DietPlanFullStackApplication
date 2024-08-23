@@ -18,7 +18,6 @@ public class DayTest {
 	private Food food;
 	private Food foodTwo;
 	private Day day;
-	private Week week;
 	
 	@BeforeEach
 	public void setUp() {
@@ -49,14 +48,12 @@ public class DayTest {
 		foodTwo.setPotassium(400);
 		foodTwo.setMultiplier(1.0);
 		foodTwo.setDeleted(false);
-		
-		week = new Week();
-		
+				
 		day = new Day();
 		day.setId(3L);
-		week.setDaysInList(List.of(day));
 		day.setFoods(List.of(food, foodTwo));
-		day.setWeek(week);
+		day.setWeekId(1L);
+		day.setFoodIdsInFoodsList(List.of(2L, 3L));
 		day.setTotalCalories(650);
 		day.setTotalProtein(152);
 		day.setTotalCarbs(10);
@@ -100,25 +97,34 @@ public class DayTest {
 	}
 	
 	@Test
-	public void testGetWeek() {
-		assertNotNull(day.getWeek());
-		assertEquals(day, day.getWeek().getDaysInList().get(0));
-		assertEquals(650, day.getWeek().getDaysInList().get(0).getTotalCalories());
-		assertEquals(food, day.getWeek().getDaysInList().get(0).getFoods().get(0));
-		assertEquals(0, day.getWeek().getDaysInList().get(0).getFoods().get(1).getCarbs());
+	public void testGetWeekId() {
+		assertEquals(1L, day.getWeekId());
 	}
 	
 	@Test
-	public void testSetWeek() {
-		Week weekTwo = new Week();
-		Day dayTwo = new Day();
-		dayTwo.setFoods(List.of(food, food));
-		weekTwo.setDaysInList(List.of(dayTwo));
-		day.setWeek(weekTwo);
+	public void testSetWeekId() {
+		day.setWeekId(2L);
 		
-		assertNotNull(day.getWeek());
-		assertEquals(dayTwo, day.getWeek().getDaysInList().get(0));
-		assertEquals(food, day.getWeek().getDaysInList().get(0).getFoods().get(1));
+		assertEquals(2L, day.getWeekId());
+	}
+	
+	@Test
+	public void testGetFoodIdsInFoodsList() {
+		assertNotNull(day.getFoodIdsInFoodsList());
+		assertEquals(2, day.getFoodIdsInFoodsList().size());
+		assertEquals(2L, day.getFoodIdsInFoodsList().get(0));
+		assertEquals(3L, day.getFoodIdsInFoodsList().get(1));
+	}
+	
+	@Test
+	public void testSetFoodIdsInFoodsList() {
+		List<Long> newFoodIdsInFoodsList = List.of(1L, 2L, 3L);
+		day.setFoodIdsInFoodsList(newFoodIdsInFoodsList);
+		
+		assertNotNull(day.getFoodIdsInFoodsList());
+		assertEquals(3, day.getFoodIdsInFoodsList().size());
+		assertEquals(1L, day.getFoodIdsInFoodsList().get(0));
+		assertEquals(2L, day.getFoodIdsInFoodsList().get(1));
 	}
 	
 	@Test

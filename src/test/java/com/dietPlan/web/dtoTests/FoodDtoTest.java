@@ -15,6 +15,7 @@ public class FoodDtoTest {
 	@BeforeEach
 	public void setUp() {
 		foodDto = new FoodDto();
+		foodDto.setId(4L);
 		foodDto.setName("Protein bar");
 		foodDto.setCalories(400);
 		foodDto.setProtein(30);
@@ -26,6 +27,18 @@ public class FoodDtoTest {
 		foodDto.setPotassium(150);
 		foodDto.setMultiplier(1.0);
 		foodDto.setDeleted(false);
+	}
+	
+	@Test
+	public void testGetId() {
+		assertEquals(4L, foodDto.getId());
+	}
+	
+	@Test
+	public void testSetId() {
+		foodDto.setId(3L);
+		
+		assertEquals(3L, foodDto.getId());
 	}
 	
 	@Test

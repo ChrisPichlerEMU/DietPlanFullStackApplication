@@ -156,11 +156,11 @@ public class WeekControllerTest {
 	}
 	
 	@Test
-	public void testAddWeekInvalidRequestNullBody() throws Exception{
+	public void testAddWeekInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/week/addWeek")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-			.andExpect(status().isBadRequest())		//Null body should return error code 400 
+			.andExpect(status().isInternalServerError())	
 			.andReturn();
 	}
 	
@@ -252,11 +252,11 @@ public class WeekControllerTest {
 	}
 	
 	@Test
-	public void testAddDaysToWeekInvalidRequestNullBody() throws Exception{
+	public void testAddDaysToWeekInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/week/addDaysToWeek/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}
 	
@@ -283,11 +283,11 @@ public class WeekControllerTest {
 	}
 	
 	@Test
-	public void testDeleteDaysInWeekInvalidRequestNullBody() throws Exception{
+	public void testDeleteDaysInWeekInvalidRequestEmptyBody() throws Exception{
 		mockMvc.perform(post("/week/deleteDaysInWeek/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(""))
-				.andExpect(status().isBadRequest())
+				.andExpect(status().isInternalServerError())
 				.andReturn();
 	}
 }

@@ -19,7 +19,6 @@ public class DayDtoTest {
 	private FoodDto foodDto;
 	private FoodDto foodDtoTwo;
 	private DayDto dayDto;
-	private WeekDto weekDto;
 	
 	@BeforeEach
 	public void setUp() {
@@ -47,12 +46,12 @@ public class DayDtoTest {
 		foodDtoTwo.setPotassium(450);
 		foodDtoTwo.setMultiplier(1.0);
 		
-		weekDto = new WeekDto();
 		
 		dayDto = new DayDto();
-		weekDto.setDaysInList(List.of(dayDto));
 		dayDto.setFoods(List.of(foodDto, foodDtoTwo));
-		dayDto.setWeek(weekDto);
+		dayDto.setWeekId(3L);
+		dayDto.setFoodIdsInFoodsList(List.of(3L, 5L));
+		dayDto.setId(5L);
 		dayDto.setTotalCalories(550);
 		dayDto.setTotalProtein(122);
 		dayDto.setTotalCarbs(11);
@@ -65,6 +64,18 @@ public class DayDtoTest {
 		dayDto.setProteinRatio(70);
 		dayDto.setFatRatio(20);
 		dayDto.setDeleted(false);
+	}
+	
+	@Test
+	public void testGetId() {
+		assertEquals(5L, dayDto.getId());
+	}
+	
+	@Test
+	public void testSetId() {
+		dayDto.setId(1L);
+		
+		assertEquals(1L, dayDto.getId());
 	}
 	
 	@Test
@@ -85,25 +96,32 @@ public class DayDtoTest {
 	}
 	
 	@Test
-	public void testGetWeek() {
-		assertNotNull(dayDto.getWeek());
-		assertEquals(dayDto, dayDto.getWeek().getDaysInList().get(0));
-		assertEquals(550, dayDto.getWeek().getDaysInList().get(0).getTotalCalories());
-		assertEquals(foodDto, dayDto.getWeek().getDaysInList().get(0).getFoods().get(0));
-		assertEquals(11, dayDto.getWeek().getDaysInList().get(0).getFoods().get(0).getCarbs());
+	public void testGetWeekId() {
+		assertEquals(3L, dayDto.getWeekId());
 	}
 	
 	@Test
-	public void testSetWeek() {
-		WeekDto weekDtoTwo = new WeekDto();
-		DayDto dayDtoTwo = new DayDto();
-		dayDtoTwo.setFoods(List.of(foodDto, foodDto));
-		weekDtoTwo.setDaysInList(List.of(dayDtoTwo));
-		dayDto.setWeek(weekDtoTwo);
+	public void testSetWeekId() {
+		dayDto.setWeekId(4L);
 		
-		assertNotNull(dayDto.getWeek());
-		assertEquals(dayDtoTwo, dayDto.getWeek().getDaysInList().get(0));
-		assertEquals(foodDto, dayDto.getWeek().getDaysInList().get(0).getFoods().get(1));
+		assertEquals(4L, dayDto.getWeekId());
+	}
+	
+	@Test
+	public void testGetFoodIdsInFoodsList() {
+		assertNotNull(dayDto.getFoodIdsInFoodsList());
+		assertEquals(2, dayDto.getFoodIdsInFoodsList().size());
+		assertEquals(3L, dayDto.getFoodIdsInFoodsList().get(0));
+		assertEquals(5L, dayDto.getFoodIdsInFoodsList().get(1));
+	}
+	
+	@Test
+	public void testSetFoodIdsInFoodsList() {
+		dayDto.setFoodIdsInFoodsList(List.of(1L));
+		
+		assertNotNull(dayDto.getFoodIdsInFoodsList());
+		assertEquals(1, dayDto.getFoodIdsInFoodsList().size());
+		assertEquals(1L, dayDto.getFoodIdsInFoodsList().get(0));
 	}
 	
 	@Test
