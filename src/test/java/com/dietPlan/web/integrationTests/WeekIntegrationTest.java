@@ -148,29 +148,6 @@ public class WeekIntegrationTest {
 	}
 	
 	@Test
-	public void testGetWeekIntegrationValid() throws Exception{
-		week = weekRepository.save(week);
-
-		MvcResult result = mockMvc.perform(put("/week/getWeek/{id}", week.getId()))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.id").value(week.getId()))
-				.andExpect(jsonPath("$.totalFat").value(20))
-				.andExpect(jsonPath("$.totalPotassium").value(1300))
-				.andReturn();
-		
-		assertThat(result).isNotNull();
-	}
-	
-	@Test
-	public void testGetWeekIntegrationInvalidNotInDatabase() throws Exception{
-		week = weekRepository.save(week);
-		
-		mockMvc.perform(put("/week/getWeek/{id}", week.getId() + 1L))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().string("An unexpected error has occured. Message: Week object not found in database in getWeekStats method with id = " + (week.getId() + 1L)));
-	}
-	
-	@Test
 	public void testDeleteWeekIntegrationValid() throws Exception{
 		week = weekRepository.save(week);
 
@@ -194,6 +171,29 @@ public class WeekIntegrationTest {
 	}
 	
 	@Test
+	public void testGetWeekIntegrationValid() throws Exception{
+		week = weekRepository.save(week);
+
+		MvcResult result = mockMvc.perform(put("/week/getWeek/{id}", week.getId()))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(week.getId()))
+				.andExpect(jsonPath("$.totalFat").value(20))
+				.andExpect(jsonPath("$.totalPotassium").value(1300))
+				.andReturn();
+		
+		assertThat(result).isNotNull();
+	}
+	
+	@Test
+	public void testGetWeekIntegrationInvalidNotInDatabase() throws Exception{
+		week = weekRepository.save(week);
+		
+		mockMvc.perform(put("/week/getWeek/{id}", week.getId() + 1L))
+				.andExpect(status().isInternalServerError())
+				.andExpect(content().string("An unexpected error has occured. Message: Week object not found in database in getWeekStats method with id = " + (week.getId() + 1L)));
+	}
+	
+	@Test
 	public void testAddDaysToWeekIntegrationValid() throws Exception{
 		weekTwo = weekRepository.save(weekTwo);
 		Day dayAdded = DayMapper.INSTANCE.toDay(dayDtoThree);
@@ -206,7 +206,40 @@ public class WeekIntegrationTest {
 				.andExpect(status().isCreated())
 				.andReturn();
 		
+		String response = result.getResponse().getContentAsString();
+		WeekDto savedWeekDto = objectMapper.readValue(response, WeekDto.class);
+		Optional<Week> savedWeek = weekRepository.findById(savedWeekDto.getId());
+		Week savedWeekModel = savedWeek.get();
+		
 		assertThat(result).isNotNull();
+		assertThat(savedWeekModel.getDayIdsInDayList().get(0)).isEqualTo(dayAdded.getId());
+		assertThat(savedWeekModel.getDayIdsInDayList().get(0)).isEqualTo(dayAdded.getId());
+	}
+	
+	@Test
+	public void testAddDaysToWeekIntegrationInvalidDayAlreadyInDaysList() throws Exception{
+		weekTwo = weekRepository.save(weekTwo);
+		Day dayAlreadyInDayList = DayMapper.INSTANCE.toDay(dayDtoThree);
+		dayAlreadyInDayList.setFoods(List.of());
+		dayAlreadyInDayList = dayRepository.save(dayAlreadyInDayList);
+		
+		mockMvc.perform(post("/week/addDaysToWeek/{id}", weekTwo.getId())		//Add a day with ID = dayAlreadyInDayList.id into weekTwo
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("[" + (dayAlreadyInDayList.getId() + "") + "]"));
+		
+		MvcResult result = mockMvc.perform(post("/week/addDaysToWeek/{id}", weekTwo.getId())	//Attempt to add the same Day object into weekTwo
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("[" + (dayAlreadyInDayList.getId() + "") + "]"))
+				.andExpect(status().isCreated())
+				.andReturn();
+		
+		String response = result.getResponse().getContentAsString();
+		WeekDto savedWeekDto = objectMapper.readValue(response, WeekDto.class);
+		Optional<Week> savedWeek = weekRepository.findById(savedWeekDto.getId());
+		Week savedWeekModel = savedWeek.get();
+		
+		assertThat(result).isNotNull();
+		assertThat(savedWeekModel.getDayIdsInDayList().size()).isEqualTo(1);	//The same Day object shouldn't be able to be added into the same Week object more than once
 	}
 	
 	@Test
@@ -226,8 +259,6 @@ public class WeekIntegrationTest {
 	@Test
 	public void testAddDaysToWeekInvalidEmptyBody() throws Exception{
 		week = weekRepository.save(week);
-		Day dayAdded = DayMapper.INSTANCE.toDay(dayDto);
-		dayAdded = dayRepository.save(dayAdded);
 		
 		mockMvc.perform(post("/week/addDaysToWeek/{id}", week.getId())
 				.contentType(MediaType.APPLICATION_JSON)
@@ -235,7 +266,81 @@ public class WeekIntegrationTest {
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().string("An unexpected error has occured. Message: Required request body is missing: public org.springframework.http.ResponseEntity<com.dietPlan.web.dto.WeekDto> com.dietPlan.web.controller.WeekController.addDaysToWeek(java.lang.Long,java.util.List<java.lang.Long>)"));
 	}
+		
+	@Test
+	public void testDeleteDaysInWeekIntegrationValid() throws Exception{
+		weekTwo = weekRepository.save(weekTwo);
+		Day dayAdded = DayMapper.INSTANCE.toDay(dayDtoThree);
+		dayAdded.setFoods(List.of());
+		dayAdded = dayRepository.save(dayAdded);
+		
+		mockMvc.perform(post("/week/addDaysToWeek/{id}", weekTwo.getId())			
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("[" + (dayAdded.getId() + "") + "]"))
+				.andExpect(status().isCreated())
+				.andReturn();
+		
+		MvcResult result = mockMvc.perform(post("/week/deleteDaysInWeek/{id}", weekTwo.getId())			
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("[" + (dayAdded.getId() + "") + "]"))
+				.andExpect(status().isCreated())
+				.andReturn();
+		
+		String response = result.getResponse().getContentAsString();
+		WeekDto savedWeekDto = objectMapper.readValue(response, WeekDto.class);
+		Optional<Week> savedWeek = weekRepository.findById(savedWeekDto.getId());
+		Week savedWeekModel = savedWeek.get();
+		
+		assertThat(result).isNotNull();
+		assertThat(savedWeekModel.getDayIdsInDayList().size()).isEqualTo(0);
+	}
 	
+	@Test
+	public void testDeleteDaysInWeekIntegrationInvalidDayNotInDaysList() throws Exception{
+		weekTwo = weekRepository.save(weekTwo);
+		Day dayAlreadyInDayList = DayMapper.INSTANCE.toDay(dayDtoThree);
+		dayAlreadyInDayList.setFoods(List.of());
+		dayAlreadyInDayList = dayRepository.save(dayAlreadyInDayList);
+		
+		MvcResult result = mockMvc.perform(post("/week/deleteDaysInWeek/{id}", weekTwo.getId())	
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("[" + (dayAlreadyInDayList.getId() + "") + "]"))
+				.andExpect(status().isCreated())
+				.andReturn();
+		
+		String response = result.getResponse().getContentAsString();
+		WeekDto savedWeekDto = objectMapper.readValue(response, WeekDto.class);
+		Optional<Week> savedWeek = weekRepository.findById(savedWeekDto.getId());
+		Week savedWeekModel = savedWeek.get();
+		
+		assertThat(result).isNotNull();
+		assertThat(savedWeekModel.getDayIdsInDayList().size()).isEqualTo(0);
+	}
+	
+	@Test
+	public void testDeleteDaysInWeekInvalidNotInDatabase() throws Exception{
+		week = weekRepository.save(week);
+		Day dayAdded = DayMapper.INSTANCE.toDay(dayDto);
+		dayAdded = dayRepository.save(dayAdded);
+		
+		mockMvc.perform(post("/week/deleteDaysInWeek/{id}", week.getId() + 1L)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("[" + (dayAdded.getId() + "") + "]"))
+				.andExpect(status().isInternalServerError())
+				.andExpect(content().string("An unexpected error has occured. Message: Week object not found in database in deleteDaysInWeek method with id = " + (week.getId() + 1L)));
+				
+	}
+	
+	@Test
+	public void testDeleteDaysInWeekInvalidEmptyBody() throws Exception{
+		week = weekRepository.save(week);
+		
+		mockMvc.perform(post("/week/deleteDaysInWeek/{id}", week.getId())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(""))
+				.andExpect(status().isInternalServerError())
+				.andExpect(content().string("An unexpected error has occured. Message: Required request body is missing: public org.springframework.http.ResponseEntity<com.dietPlan.web.dto.WeekDto> com.dietPlan.web.controller.WeekController.deleteDaysInWeek(java.lang.Long,java.util.List<java.lang.Long>)"));
+	}
 	private static String toJsonString(final Object obj) {
 		try {
 			return new ObjectMapper().writeValueAsString(obj);

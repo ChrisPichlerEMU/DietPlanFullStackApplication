@@ -39,29 +39,42 @@ public class WeekOrchestrator {
 		List<Day> daysAddedToWeekObject = dayRepository.findAllById(dayIds);
 		
 		for(Day day : daysAddedToWeekObject) {
+			if(existsInList(weekBeingUpdated.getDayIdsInDayList(), day.getId()))
+				continue;
 			calculateStats.calculateTotalDayStats(day);
 			day.setWeekId(weekBeingUpdated.getId());
+			weekBeingUpdated.getDaysInList().add(day);
+			weekBeingUpdated.getDayIdsInDayList().add(day.getId());
 		}
-		
-		weekBeingUpdated.getDaysInList().addAll(daysAddedToWeekObject);
-		weekBeingUpdated.getDayIdsInDayList().addAll(dayIds);
+
 		calculateStats.calculateTotalWeekStats(weekBeingUpdated);
 		weekRepository.save(weekBeingUpdated);
 		return WeekMapper.INSTANCE.toWeekDto(weekBeingUpdated);
 	}
 	
 	public WeekDto deleteDaysInWeek(Long weekId, List<Long> dayIds) {
-		Week weekBeingUpdated = weekRepository.findById(weekId).orElseThrow(() -> new RuntimeException("Week object not found in database in addDaysToWeek method with id = " + weekId));
+		Week weekBeingUpdated = weekRepository.findById(weekId).orElseThrow(() -> new RuntimeException("Week object not found in database in deleteDaysInWeek method with id = " + weekId));
 		List<Day> daysDeletedFromWeekObject = dayRepository.findAllById(dayIds);
 		
 		for(Day day: daysDeletedFromWeekObject) {
+			if(!existsInList(weekBeingUpdated.getDayIdsInDayList(), day.getId()))
+				continue;
 			day.setWeekId(null);
+			weekBeingUpdated.getDaysInList().remove(day);
 			weekBeingUpdated.getDayIdsInDayList().remove(day.getId());
 		}
 		
-		weekBeingUpdated.getDaysInList().removeAll(daysDeletedFromWeekObject);
 		calculateStats.calculateTotalWeekStats(weekBeingUpdated);
 		weekRepository.save(weekBeingUpdated);
 		return WeekMapper.INSTANCE.toWeekDto(weekBeingUpdated);
+	}
+	
+	private static boolean existsInList(List<Long> daysInList, long dayId) {
+		for(Long nextDayIdInList : daysInList) {
+			if(nextDayIdInList == dayId)
+				return true;
+		}
+		
+		return false;
 	}
 }

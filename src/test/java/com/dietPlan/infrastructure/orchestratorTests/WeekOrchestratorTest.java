@@ -209,6 +209,6 @@ public class WeekOrchestratorTest {
 		
 		RuntimeException thrownException = assertThrows(RuntimeException.class, () -> weekOrchestrator.deleteDaysInWeek(1L, List.of(2L, 3L)), "deleteDaysInWeek() should've thrown an exception, but it didn't");
 		
-		assertTrue(thrownException.getMessage().equals("Week object not found in database in addDaysToWeek method with id = " + 1L));
+		assertTrue(thrownException.getMessage().equals("Week object not found in database in deleteDaysInWeek method with id = " + 1L));
 	}
 }
