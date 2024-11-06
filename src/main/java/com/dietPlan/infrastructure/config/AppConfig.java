@@ -1,9 +1,10 @@
 package com.dietPlan.infrastructure.config;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 @Configuration
 public class AppConfig {

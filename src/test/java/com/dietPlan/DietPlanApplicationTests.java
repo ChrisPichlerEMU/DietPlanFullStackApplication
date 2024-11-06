@@ -1,6 +1,5 @@
 package com.dietPlan;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,4 +16,5 @@ class DietPlanApplicationTests {
 	void main() {
 		DietPlanApplication.main(new String[] {});
 	}
+
 }

@@ -23,13 +23,13 @@ public class FoodController {
 	public FoodController(FoodService foodService) {
 		this.foodService = foodService;
 	}
-	
+	//http://localhost:8080/food/addFood
 	@PostMapping("/addFood")
 	public ResponseEntity<FoodDto> addFood(@RequestBody FoodDto foodDto){
 		FoodDto savedFoodObject = foodService.addFood(foodDto);
 		return new ResponseEntity<>(savedFoodObject, HttpStatus.CREATED);
 	}
-	
+	//http://localhost:8080/food/getFood/ID
 	@GetMapping("/getFood/{foodId}")
 	public ResponseEntity<FoodDto> getFoodStats(@PathVariable Long foodId){
 		FoodDto returnedFoodObject = foodService.getFoodStats(foodId);
